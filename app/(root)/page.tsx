@@ -1,4 +1,4 @@
-const Home = () => {
+const RootPage = () => {
   return (
       <main>
         <h1 className="text-4xl font-bold">Eventify</h1>
@@ -6,4 +6,4 @@ const Home = () => {
   );
 }
 
-export default Home;
+export default RootPage;
