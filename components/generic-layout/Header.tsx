@@ -17,7 +17,7 @@ const Header = () => {
 
           {/*  middle nav  */}
           <SignedIn>
-            <nav className="hidden md:flex-between w-full max-w-xs">
+            <nav className="hidden md:block w-full max-w-xs">
               <HeaderNavItems/>
             </nav>
           </SignedIn>
