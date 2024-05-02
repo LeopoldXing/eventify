@@ -6,23 +6,25 @@ import {Button} from "@/components/ui/button";
 
 const Header = () => {
   return (
-      <header className="flex flex-row items-center justify-between px-6 py-4">
-        {/*  左侧 logo  */}
-        <Link href="/">
-          <div className="flex flex-row items-center justify-center">
+      <header className="w-full border-b">
+        <div className="flex flex-row items-center justify-between w-full max-w-7xl p-5 md:px-10 xl:px-0 lg:mx-auto">
+          {/*  左侧 logo  */}
+          <Link href="/" className="w-36">
             <Image src="/assets/images/logo.svg" alt="Eventify Logo" height={38} width={128}></Image>
-          </div>
-        </Link>
+          </Link>
 
-        {/*  右侧 退出登录 | 登录  */}
-        <SignedOut>
-          <Button size="lg" asChild className="rounded-full">
-            <Link href="/sign-in">Login</Link>
-          </Button>
-        </SignedOut>
-        <SignedIn>
-          <UserButton afterSignOutUrl="/"/>
-        </SignedIn>
+          {/*  右侧 退出登录 | 登录  */}
+          <div className="flex w-32 justify-end gap-3">
+            <SignedOut>
+              <Button size="lg" asChild className="rounded-full">
+                <Link href="/sign-in">Login</Link>
+              </Button>
+            </SignedOut>
+            <SignedIn>
+              <UserButton afterSignOutUrl="/"/>
+            </SignedIn>
+          </div>
+        </div>
       </header>
   );
 };
