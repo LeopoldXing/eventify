@@ -6,7 +6,7 @@ import {NextResponse} from "next/server";
 
 export async function POST(req: Request) {
 
-  // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhooks
+  // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET
 
   if (!WEBHOOK_SECRET) {
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
 
   // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    return new Response('Error occurred -- no svix headers', {
+    return new Response('Error occured -- no svix headers', {
       status: 400
     })
   }
@@ -43,8 +43,8 @@ export async function POST(req: Request) {
       "svix-signature": svix_signature,
     }) as WebhookEvent
   } catch (err) {
-    console.error('Error verifying webhooks:', err);
-    return new Response('Error occurred', {
+    console.error('Error verifying webhook:', err);
+    return new Response('Error occured', {
       status: 400
     })
   }
