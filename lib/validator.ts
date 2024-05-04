@@ -1,7 +1,7 @@
 import {z} from "zod";
 
 export const eventFormSchema = z.object({
-  username: z.string().min(4, "Username is too short").max(16, "Username can not be longer than 16 characters"),
+  title: z.string().min(4, "Title is too short").max(32, "Title can not be longer than 32 characters"),
   description: z.string().max(400, "Description can not be longer than 400 characters"),
   location: z.string().min(4, "Location is too short"),
   imageUrl: z.string(),
