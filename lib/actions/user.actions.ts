@@ -1,23 +1,27 @@
-"use server";
+'use server'
 
-import {CreateUserParams, UpdateUserParams} from "@/types";
-import {handleError} from "@/lib/utils";
-import {connectToDatabase} from "@/lib/database";
-import User from "@/lib/database/models/user.model";
-import {revalidatePath} from "next/cache";
-import Order from "@/lib/database/models/order.model";
+import {revalidatePath} from 'next/cache'
+
+import {connectToDatabase} from '@/lib/database'
+import User from '@/lib/database/models/user.model'
+import Order from '@/lib/database/models/order.model'
+import Event from '@/lib/database/models/event.model'
+import {handleError} from '@/lib/utils'
+
+import {CreateUserParams, UpdateUserParams} from '@/types'
 
 export const createUser = async (user: CreateUserParams) => {
   try {
-    await connectToDatabase();
-    const newUser = await User.create(user);
-    return JSON.parse(JSON.stringify(newUser));
+    await connectToDatabase()
+
+    const newUser = await User.create(user)
+    return JSON.parse(JSON.stringify(newUser))
   } catch (error) {
-    handleError(error);
+    handleError(error)
   }
 }
 
-export async function getUserById(userId: string) {
+export const getUserById = async (userId: string) => {
   try {
     await connectToDatabase()
 
@@ -30,7 +34,7 @@ export async function getUserById(userId: string) {
   }
 }
 
-export async function updateUser(clerkId: string, user: UpdateUserParams) {
+export const updateUser = async (clerkId: string, user: UpdateUserParams) => {
   try {
     await connectToDatabase()
 
@@ -43,7 +47,7 @@ export async function updateUser(clerkId: string, user: UpdateUserParams) {
   }
 }
 
-export async function deleteUser(clerkId: string) {
+export const deleteUser = async (clerkId: string) => {
   try {
     await connectToDatabase()
 
