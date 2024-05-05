@@ -4,7 +4,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {Button} from "@/components/ui/button";
-import {Form, FormControl, FormDescription, FormField, FormItem, FormMessage} from "@/components/ui/form";
+import {Form, FormControl, FormField, FormItem, FormMessage} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {eventFormSchema} from "@/lib/validator";
 import CategoryDropdown from "@/components/form/element/CategoryDropdown";
@@ -12,7 +12,7 @@ import React, {useState} from "react";
 import {ICategory} from "@/lib/database/models/category.model";
 import {Textarea} from "@/components/ui/textarea"
 import FileUploader from "@/components/form/element/FileUploader";
-
+import Image from "next/image";
 
 type EventFormProps = {
   userId: string,
@@ -83,6 +83,21 @@ const EventForm = ({userId, type}: EventFormProps) => {
                 <FormItem className="w-full">
                   <FormControl>
                     <FileUploader onFieldChange={field.onChange} imageUrl={field.value} setFileList={setFileList}/>
+                  </FormControl>
+                  <FormMessage className="form-description"/>
+                </FormItem>
+            )}/>
+          </div>
+          <div className="flex flex-col space-y-5 md:flex-row md:space-y-0 md:space-x-5">
+            <FormField control={form.control} name="location" render={({field}) => (
+                <FormItem className="w-full">
+                  <FormControl>
+                    <div
+                        className="px-6 flex items-center justify-center overflow-hidden border-none rounded-lg bg-gray-100
+                                   focus:outline-none focus-visible:ring-transparent focus:ring-transparent !important">
+                      <Image src="/assets/icons/location-grey.svg" alt="calendar" width={24} height={24}/>
+                      <Input placeholder="Event location or online" {...field} className="w-full form-input"/>
+                    </div>
                   </FormControl>
                   <FormMessage className="form-description"/>
                 </FormItem>
