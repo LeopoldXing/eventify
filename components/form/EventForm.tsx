@@ -8,9 +8,10 @@ import {Form, FormControl, FormDescription, FormField, FormItem, FormMessage} fr
 import {Input} from "@/components/ui/input";
 import {eventFormSchema} from "@/lib/validator";
 import CategoryDropdown from "@/components/form/element/CategoryDropdown";
-import {useState} from "react";
+import React, {useState} from "react";
 import {ICategory} from "@/lib/database/models/category.model";
 import {Textarea} from "@/components/ui/textarea"
+import FileUploader from "@/components/form/element/FileUploader";
 
 
 type EventFormProps = {
@@ -44,6 +45,9 @@ const EventForm = ({userId, type}: EventFormProps) => {
   /*  manage category list  */
   const [categoryList, setCategoryList] = useState<ICategory[]>([])
 
+  /*  manage file array  */
+  const [fileList, setFileList] = useState<File[]>([]);
+
   return (
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col space-y-5">
@@ -71,6 +75,14 @@ const EventForm = ({userId, type}: EventFormProps) => {
                 <FormItem className="w-full">
                   <FormControl>
                     <Textarea placeholder="Description" {...field} className="h-72 form-input"/>
+                  </FormControl>
+                  <FormMessage className="form-description"/>
+                </FormItem>
+            )}/>
+            <FormField control={form.control} name="imageUrl" render={({field}) => (
+                <FormItem className="w-full">
+                  <FormControl>
+                    <FileUploader onFieldChange={field.onChange} imageUrl={field.value} setFileList={setFileList}/>
                   </FormControl>
                   <FormMessage className="form-description"/>
                 </FormItem>
