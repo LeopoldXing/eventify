@@ -209,12 +209,16 @@ body {
     @apply w-full bg-grey-50 h-[54px] placeholder:text-grey-500 rounded-full p-regular-16 px-5 py-3 border-none focus-visible:ring-transparent focus:ring-transparent !important;
   }
 
+  .form-select {
+    @apply pl-6 py-[1.7rem] border-none rounded-lg bg-gray-100 placeholder:text-grey-500 placeholder:text-lg placeholder:font-thin focus:outline-none;
+  }
+
   .input-field {
     @apply bg-grey-50 h-[54px] focus-visible:ring-offset-0 placeholder:text-grey-500 rounded-full p-regular-16 px-4 py-3 border-none focus-visible:ring-transparent !important;
   }
 
   .form-input {
-    @apply pl-6 py-[1.7rem] border-none rounded-lg bg-gray-100 placeholder:text-grey-500 placeholder:text-lg placeholder:font-thin focus:outline-none;
+    @apply pl-6 py-[1.7rem] text-lg border-none rounded-lg bg-gray-100 placeholder:text-grey-500 placeholder:text-lg placeholder:font-thin focus:outline-none;
   }
 
   .form-description {
@@ -223,6 +227,10 @@ body {
 
   .textarea {
     @apply bg-grey-50 flex flex-1 placeholder:text-grey-500 p-regular-16 px-5 py-3 border-none focus-visible:ring-transparent !important;
+  }
+
+  .form-textarea {
+    @apply pl-6 py-3 text-lg border-none rounded-lg bg-gray-100 placeholder:text-center placeholder:text-grey-500 placeholder:text-lg placeholder:font-thin focus:outline-none;
   }
 
   .button {

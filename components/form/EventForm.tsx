@@ -7,6 +7,11 @@ import {Button} from "@/components/ui/button";
 import {Form, FormControl, FormDescription, FormField, FormItem, FormMessage} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {eventFormSchema} from "@/lib/validator";
+import CategoryDropdown from "@/components/form/element/CategoryDropdown";
+import {useState} from "react";
+import {ICategory} from "@/lib/database/models/category.model";
+import {Textarea} from "@/components/ui/textarea"
+
 
 type EventFormProps = {
   userId: string,
@@ -36,6 +41,9 @@ const EventForm = ({userId, type}: EventFormProps) => {
     console.log(values)
   }
 
+  /*  manage category list  */
+  const [categoryList, setCategoryList] = useState<ICategory[]>([])
+
   return (
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col space-y-5">
@@ -43,19 +51,28 @@ const EventForm = ({userId, type}: EventFormProps) => {
             <FormField control={form.control} name="title" render={({field}) => (
                 <FormItem className="w-full">
                   <FormControl>
-                    <Input placeholder="Event title" {...field}
-                           className="form-input"/>
+                    <Input placeholder="Event title" {...field} className="form-input"/>
                   </FormControl>
-                  <FormMessage/>
+                  <FormMessage className="form-description"/>
                 </FormItem>
             )}/>
 
             <FormField control={form.control} name="description" render={({field}) => (
                 <FormItem className="w-full">
                   <FormControl>
-                    <Input placeholder="Description" {...field} className="form-input"/>
+                    <CategoryDropdown categoryList={categoryList} onChangeHandler={field.onChange} value={field.value}/>
                   </FormControl>
-                  <FormMessage/>
+                  <FormMessage className="form-description"/>
+                </FormItem>
+            )}/>
+          </div>
+          <div className="flex flex-col space-y-5 md:flex-row md:space-y-0 md:space-x-5">
+            <FormField control={form.control} name="description" render={({field}) => (
+                <FormItem className="w-full">
+                  <FormControl>
+                    <Textarea placeholder="Description" {...field} className="h-72 form-input"/>
+                  </FormControl>
+                  <FormMessage className="form-description"/>
                 </FormItem>
             )}/>
           </div>
