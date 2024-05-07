@@ -54,6 +54,8 @@ const EventForm = ({userId, type}: EventFormProps) => {
   /*  manage date picker  */
   const [startDate, setStartDate] = useState<Date>(new Date());
 
+  // @ts-ignore
+  // @ts-ignore
   return (
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col space-y-5">
@@ -159,6 +161,7 @@ const EventForm = ({userId, type}: EventFormProps) => {
                                        className="whitespace-nowrap pr-3 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                   Free Ticket
                                 </label>
+                                {/* @ts-ignore */}
                                 <Checkbox id="isFree" onCheckedChange={field.onChange} checked={field.value}
                                           className="mr-2 h-5 w-5 border-2 border-primary-500"/>
                               </div>
