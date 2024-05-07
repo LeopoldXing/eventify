@@ -2,7 +2,7 @@ import React, {Dispatch, SetStateAction, useCallback} from 'react';
 import {useDropzone} from "@uploadthing/react";
 import {generateClientDropzoneAccept} from "uploadthing/client";
 import {Button} from "@/components/ui/button";
-import {convertFileToUrl} from "@/utils/project-utils";
+import {convertFileToUrl} from "@/lib/utils";
 import {FileWithPath} from "file-selector";
 
 type FileUploaderProps = {
