@@ -13,6 +13,8 @@ import {ICategory} from "@/lib/database/models/category.model";
 import {Textarea} from "@/components/ui/textarea"
 import FileUploader from "@/components/form/element/FileUploader";
 import Image from "next/image";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 type EventFormProps = {
   userId: string,
@@ -47,6 +49,9 @@ const EventForm = ({userId, type}: EventFormProps) => {
 
   /*  manage file array  */
   const [fileList, setFileList] = useState<File[]>([]);
+
+  /*  manage date picker  */
+  const [startDate, setStartDate] = useState<Date>(new Date());
 
   return (
       <Form {...form}>
@@ -102,6 +107,39 @@ const EventForm = ({userId, type}: EventFormProps) => {
                 </FormItem>
             )}/>
           </div>
+          {/*  start date  */}
+          <div className="flex flex-col space-y-5 md:flex-row md:space-y-0 md:space-x-5">
+            <FormField control={form.control} name="startDateTime" render={({field}) => (
+                <FormItem className="w-full">
+                  <FormControl>
+                    <div className="px-6 py-4 flex items-center justify-center overflow-hidden border-none rounded-lg bg-gray-100 focus:outline-none
+                                    focus-visible:ring-transparent focus:ring-transparent !important">
+                      <Image src="/assets/icons/calendar.svg" alt="calendar" width={24} height={24} className="filter-grey"/>
+                      <p className="ml-3 whitespace-nowrap text-grey-600">Start Date: </p>
+                      <DatePicker selected={field.value} onChange={(date: Date) => field.onChange(date)} showTimeSelect timeInputLabel="Time:"
+                                  dateFormat="MM/dd/yyyy h:mm aa" wrapperClassName="datePicker"/>
+                    </div>
+                  </FormControl>
+                  <FormMessage className="form-description"/>
+                </FormItem>
+            )}/>
+            {/*  end date  */}
+            <FormField control={form.control} name="endDateTime" render={({field}) => (
+                <FormItem className="w-full">
+                  <FormControl>
+                    <div className="px-6 py-4 flex items-center justify-center overflow-hidden border-none rounded-lg bg-gray-100 focus:outline-none
+                                    focus-visible:ring-transparent focus:ring-transparent !important">
+                      <Image src="/assets/icons/calendar.svg" alt="calendar" width={24} height={24} className="filter-grey"/>
+                      <p className="ml-3 whitespace-nowrap text-grey-600">End Date: </p>
+                      <DatePicker selected={field.value} onChange={(date: Date) => field.onChange(date)} showTimeSelect timeInputLabel="Time:"
+                                  dateFormat="MM/dd/yyyy h:mm aa" wrapperClassName="datePicker"/>
+                    </div>
+                  </FormControl>
+                  <FormMessage className="form-description"/>
+                </FormItem>
+            )}/>
+          </div>
+
           <Button type="submit">Submit</Button>
         </form>
       </Form>
