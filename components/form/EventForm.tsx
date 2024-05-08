@@ -2,41 +2,39 @@
 
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useForm} from "react-hook-form";
-import {z} from "zod";
+import * as z from 'zod';
 import {Button} from "@/components/ui/button";
 import {Form, FormControl, FormField, FormItem, FormMessage} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {eventFormSchema} from "@/lib/validator";
 import CategoryDropdown from "@/components/form/element/CategoryDropdown";
 import React, {useState} from "react";
-import {ICategory} from "@/lib/database/models/category.model";
 import {Textarea} from "@/components/ui/textarea"
 import FileUploader from "@/components/form/element/FileUploader";
 import Image from "next/image";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {Checkbox} from "@/components/ui/checkbox"
+import {IEvent} from "@/lib/database/models/event.model";
+import {eventDefaultValues} from "@/constants";
 
 type EventFormProps = {
   userId: string,
-  type: "create" | "update"
+  type: "create" | "update",
+  event?: IEvent,
+  eventId?: string
 }
 
-const EventForm = ({userId, type}: EventFormProps) => {
+const EventForm = ({userId, type, event, eventId}: EventFormProps) => {
+  const initialValues = event && type === 'update' ? {
+    ...event,
+    startDateTime: new Date(event.startDateTime),
+    endDateTime: new Date(event.endDateTime)
+  } : eventDefaultValues;
+
   const form = useForm<z.infer<typeof eventFormSchema>>({
     resolver: zodResolver(eventFormSchema),
-    defaultValues: {
-      title: '',
-      description: '',
-      location: '',
-      imageUrl: '',
-      startDateTime: new Date(),
-      endDateTime: new Date(),
-      categoryId: '',
-      price: '',
-      isFree: false,
-      url: '',
-    }
+    defaultValues: initialValues
   })
 
   function onSubmit(values: z.infer<typeof eventFormSchema>) {
@@ -147,8 +145,8 @@ const EventForm = ({userId, type}: EventFormProps) => {
                       <Image src="/assets/icons/dollar.svg" alt="dollar" width={24} height={24} className="filter-grey"/>
                       <Input type="number" placeholder="price" {...field} className="w-full form-input"/>
                       {/*  isFree checkbox  */}
-                      <FormField control={form.control} name="price" render={({field}) => (
-                          <FormItem className="w-full">
+                      <FormField control={form.control} name="isFree" render={({field}) => (
+                          <FormItem>
                             <FormControl>
                               <div className="px-6 py-4 flex items-center justify-center overflow-hidden border-none rounded-lg bg-gray-100 focus:outline-none
                                               focus-visible:ring-transparent focus:ring-transparent !important">
@@ -156,7 +154,6 @@ const EventForm = ({userId, type}: EventFormProps) => {
                                        className="whitespace-nowrap pr-3 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                   Free Ticket
                                 </label>
-                                {/* @ts-ignore */}
                                 <Checkbox id="isFree" onCheckedChange={field.onChange} checked={field.value}
                                           className="mr-2 h-5 w-5 border-2 border-primary-500"/>
                               </div>

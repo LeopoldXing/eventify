@@ -1,5 +1,4 @@
 import {z} from "zod";
-import {CheckedState} from "@radix-ui/react-checkbox";
 
 export const eventFormSchema = z.object({
   title: z.string().min(4, "Title is too short").max(32, "Title can not be longer than 32 characters"),
