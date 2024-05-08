@@ -42,7 +42,7 @@ const getEventDetailsById = async (eventId: string) => {
 
     const event = await Event.findById(eventId)
         .populate({path: "category", model: Category, select: "_id name"})
-        .populate({path: "organizer", model: User, select: "_id firstname lastname"});
+        .populate({path: "organizer", model: User, select: "_id firstName lastName"});
 
     return JSON.parse(JSON.stringify(event));
   } catch (e) {
