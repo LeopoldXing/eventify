@@ -17,6 +17,10 @@ import "react-datepicker/dist/react-datepicker.css";
 import {Checkbox} from "@/components/ui/checkbox"
 import {IEvent} from "@/lib/database/models/event.model";
 import {eventDefaultValues} from "@/constants";
+import {useUploadThing} from "@/utils/uploadthing/uploadthing-utils";
+import {handleError} from "@/lib/utils";
+import {useRouter} from "next/navigation";
+import {createEvent} from "@/lib/actions/event.actions";
 
 type EventFormProps = {
   userId: string,
@@ -26,6 +30,8 @@ type EventFormProps = {
 }
 
 const EventForm = ({userId, type, event, eventId}: EventFormProps) => {
+  const router = useRouter();
+
   const initialValues = event && type === 'update' ? {
     ...event,
     startDateTime: new Date(event.startDateTime),
@@ -37,9 +43,35 @@ const EventForm = ({userId, type, event, eventId}: EventFormProps) => {
     defaultValues: initialValues
   })
 
-  function onSubmit(values: z.infer<typeof eventFormSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+  const {startUpload} = useUploadThing("imageUploader");
+
+  const onSubmit = async (values: z.infer<typeof eventFormSchema>) => {
+    let uploadedImageUrl = values.imageUrl;
+
+    if (Array.isArray(fileList) && fileList.length > 0) {
+      const uploadedImages = await startUpload(fileList);
+      if (!uploadedImages) {
+        return;
+      }
+      uploadedImageUrl = uploadedImages[0].url;
+    }
+
+    if (type === "create") {
+      try {
+        const newEvent = await createEvent({
+          event: {...values, imageUrl: uploadedImageUrl},
+          userId,
+          path: "/profile"
+        });
+        if (newEvent) {
+          form.reset();
+          router.push(`/events/${newEvent._id}`);
+        }
+      } catch (e) {
+        handleError(e);
+      }
+    }
+
     console.log(values)
   }
 
