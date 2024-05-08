@@ -45,17 +45,12 @@ const EventForm = ({userId, type}: EventFormProps) => {
     console.log(values)
   }
 
-  /*  manage category list  */
-  const [categoryList, setCategoryList] = useState<ICategory[]>([])
-
   /*  manage file array  */
   const [fileList, setFileList] = useState<File[]>([]);
 
   /*  manage date picker  */
   const [startDate, setStartDate] = useState<Date>(new Date());
 
-  // @ts-ignore
-  // @ts-ignore
   return (
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col space-y-5">
@@ -69,10 +64,10 @@ const EventForm = ({userId, type}: EventFormProps) => {
                 </FormItem>
             )}/>
 
-            <FormField control={form.control} name="description" render={({field}) => (
+            <FormField control={form.control} name="categoryId" render={({field}) => (
                 <FormItem className="w-full">
                   <FormControl>
-                    <CategoryDropdown categoryList={categoryList} onChangeHandler={field.onChange} value={field.value}/>
+                    <CategoryDropdown onChangeHandler={field.onChange} value={field.value}/>
                   </FormControl>
                   <FormMessage className="form-description"/>
                 </FormItem>

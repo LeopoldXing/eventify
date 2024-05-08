@@ -1,4 +1,4 @@
-import React, {startTransition, useState} from 'react';
+import React, {startTransition, useEffect, useState} from 'react';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {
   AlertDialog,
@@ -12,19 +12,31 @@ import {
   AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
 import {Input} from "@/components/ui/input";
+import {createCategory, getAllCategories} from "@/lib/actions/category.actions";
+import {ICategory} from "@/lib/database/models/category.model";
 
 type DropdownProps = {
-  categoryList: any[],
-  value: string,
-  onChangeHandler?: (value: string) => void
+  value?: string,
+  onChangeHandler?: () => void
 }
 
-const CategoryDropdown = ({categoryList, value, onChangeHandler}: DropdownProps) => {
+const CategoryDropdown = ({value, onChangeHandler}: DropdownProps) => {
+  const [categoryList, setCategoryList] = useState<ICategory[]>([])
   const [newCategory, setNewCategory] = useState("");
 
   const handleAddCategory = () => {
-
+    createCategory({categoryName: newCategory.trim()}).then((category) => {
+      setCategoryList((prevState) => [...prevState, category]);
+    });
   };
+
+  useEffect(() => {
+    const getAllCategoryList = async () => {
+      const allCategoryList = await getAllCategories();
+      Array.isArray(allCategoryList) && setCategoryList(allCategoryList);
+    }
+    getAllCategoryList();
+  }, [newCategory]);
 
   return (
       <Select onValueChange={onChangeHandler} defaultValue={value}>
@@ -33,10 +45,12 @@ const CategoryDropdown = ({categoryList, value, onChangeHandler}: DropdownProps)
         </SelectTrigger>
         <SelectContent>
           {Array.isArray(categoryList) && categoryList.map(category => (
-              <SelectItem key={category.id} value={category.id}>{category.name}</SelectItem>
+              <SelectItem key={category._id} value={category._id}>{category.name}</SelectItem>
           ))}
           <AlertDialog>
-            <AlertDialogTrigger className="pl-6 py-2 rounded-b-lg">Open</AlertDialogTrigger>
+            <AlertDialogTrigger className="pl-6 py-2 w-full rounded-sm text-primary-500 hover:bg-primary-50 focus:text-primary-500">
+              Add new category
+            </AlertDialogTrigger>
             <AlertDialogContent className="bg-white">
               <AlertDialogHeader>
                 <AlertDialogTitle>New Category</AlertDialogTitle>
