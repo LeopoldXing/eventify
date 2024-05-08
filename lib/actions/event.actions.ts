@@ -1,6 +1,6 @@
 "use server";
 
-import {CreateEventParams} from "@/types";
+import {CreateEventParams, GetAllEventsParams} from "@/types";
 import {handleError} from "@/lib/utils";
 import {connectToDatabase} from "@/lib/database";
 import User from "@/lib/database/models/user.model";
@@ -50,4 +50,34 @@ const getEventDetailsById = async (eventId: string) => {
   }
 }
 
-export {createEvent, getEventDetailsById};
+/**
+ * get all events according to the params
+ * @param query
+ * @param limit
+ * @param page
+ * @param category
+ */
+const getAllEvents = async ({query, limit = 6, page, category}: GetAllEventsParams) => {
+  try {
+    await connectToDatabase();
+
+    /*  defining the conditions  */
+    let conditions = {};
+
+    /*  get events  */
+    const events = await Event.find(conditions).sort({createdAt: "descending"}).limit(limit).skip(0)
+        .populate({path: "category", model: Category, select: "_id name"})
+        .populate({path: "organizer", model: User, select: "_id firstName lastName"});
+    const count = await Event.countDocuments(conditions);
+
+    /*  return results  */
+    return {
+      data: JSON.parse(JSON.stringify(events)),
+      totalPages: Math.ceil(events.length / count)
+    }
+  } catch (e) {
+    handleError(e);
+  }
+}
+
+export {createEvent, getEventDetailsById, getAllEvents};

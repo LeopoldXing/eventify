@@ -1,6 +1,7 @@
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
+import Collection from "@/components/Collection";
 
 export const revalidate = 10;
 
@@ -32,6 +33,9 @@ const RootPage = () => {
             Search
             CategoryFilter
           </div>
+
+          <Collection itemList={[]} fallbackTitle="Something is wrong" fallbackSubText="fallbackSubText" collectionType="all_event" limit={5} page={1}
+                      totalPage={3}/>
         </div>
       </>
   );
