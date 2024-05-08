@@ -65,6 +65,7 @@ const EventForm = ({userId, type, event, eventId}: EventFormProps) => {
         });
         if (newEvent) {
           form.reset();
+          alert(`新 event id -> ${newEvent._id}`);
           router.push(`/events/${newEvent._id}`);
         }
       } catch (e) {

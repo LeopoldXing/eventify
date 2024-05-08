@@ -5,7 +5,14 @@ import {handleError} from "@/lib/utils";
 import {connectToDatabase} from "@/lib/database";
 import User from "@/lib/database/models/user.model";
 import Event from "@/lib/database/models/event.model";
+import Category from "@/lib/database/models/category.model";
 
+/**
+ * create a new event
+ * @param event
+ * @param userId
+ * @param path
+ */
 const createEvent = async ({event, userId, path}: CreateEventParams) => {
   try {
     await connectToDatabase();
@@ -25,4 +32,22 @@ const createEvent = async ({event, userId, path}: CreateEventParams) => {
   }
 }
 
-export {createEvent};
+/**
+ * get event details from database by eventId
+ * @param eventId
+ */
+const getEventDetailsById = async (eventId: string) => {
+  try {
+    await connectToDatabase();
+
+    const event = await Event.findById(eventId)
+        .populate({path: "category", model: Category, select: "_id name"})
+        .populate({path: "organizer", model: User, select: "_id firstname lastname"});
+
+    return JSON.parse(JSON.stringify(event));
+  } catch (e) {
+    handleError(e);
+  }
+}
+
+export {createEvent, getEventDetailsById};
