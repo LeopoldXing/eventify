@@ -2,10 +2,20 @@ import {Button} from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import Collection from "@/components/Collection";
+import {getAllEvents} from "@/lib/actions/event.actions";
 
 export const revalidate = 10;
 
-const RootPage = () => {
+const RootPage = async () => {
+  const events = await getAllEvents({
+    query: "",
+    category: "",
+    page: 1,
+    limit: 6
+  });
+
+  console.log(events);
+
   return (
       <>
         {/*  Host, Connect, Celebrate: Your Events, Our Platform  */}
@@ -14,11 +24,10 @@ const RootPage = () => {
             <div className="flex flex-col justify-center space-y-8">
               <h1 className="h1-bold">Host, Connect, Celebrate: Your Events, Our Platform</h1>
               <p className="p-regular-20 md:p-regular-24">Book and learn helpful tips from 3,168+ mentors in world-class companies with our global
-                community.</p>
+                community.
+              </p>
               <Button size="lg" asChild className="w-full py-6 rounded-full text-center md:w-fit">
-                <Link href="#events">
-                  Explore Now
-                </Link>
+                <Link href="#events">Explore Now</Link>
               </Button>
             </div>
             <Image src="/assets/images/hero.png" alt="Eventify Hero Image" width={1000} height={1000}
@@ -34,7 +43,7 @@ const RootPage = () => {
             CategoryFilter
           </div>
 
-          <Collection itemList={[]} fallbackTitle="Something is wrong" fallbackSubText="fallbackSubText" collectionType="all_event" limit={5} page={1}
+          <Collection itemList={events?.data} fallbackTitle="Something is wrong" fallbackSubText="fallbackSubText" collectionType="all_event" limit={5} page={1}
                       totalPage={3}/>
         </div>
       </>

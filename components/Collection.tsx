@@ -1,5 +1,5 @@
 import {IEvent} from "@/lib/database/models/event.model";
-import {getAllEvents} from "@/lib/actions/event.actions";
+import EventCard from "@/components/EventCard";
 
 type CollectionProps = {
   itemList: IEvent[],
@@ -12,15 +12,31 @@ type CollectionProps = {
   urlParamName?: string
 }
 
-const EventCollection = async ({itemList, fallbackTitle, fallbackSubText, collectionType, limit, page, totalPage = 0, urlParamName}: CollectionProps) => {
-  const allEventList = await getAllEvents({query: "", category: "", page: 1, limit: 6});
-
-  console.log("allEventList -> ");
-  console.log(allEventList);
+const Collection = async ({itemList, fallbackTitle, fallbackSubText, collectionType, limit, page, totalPage = 0, urlParamName}: CollectionProps) => {
+  console.log("itemList -> ")
+  console.log(itemList);
 
   return (
-      <div></div>
+      <>
+        {Array.isArray(itemList) && itemList.length > 1 && (
+            <div className="flex flex-col items-center space-y-10">
+              <ul className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:gap-7 xl:gap-10 2xl:max-w-7xl">
+                {itemList.map(event => (
+                    <li key={event._id}>
+                      <EventCard event={event} hasOrderLink={collectionType === "events_organized"} hidePrice={collectionType === "my_tickets"}/>
+                    </li>
+                ))}
+              </ul>
+            </div>
+        )}
+        {(!Array.isArray(itemList) || itemList.length === 0) && (
+            <div className="py-28 flex flex-col space-y-8 justify-center text-center bg-grey-50 min-h-72">
+              <h3 className="p-bold-20 md:h5-bold">{fallbackTitle}</h3>
+              <p className="p-regular-14">{fallbackSubText}</p>
+            </div>
+        )}
+      </>
   );
 };
 
-export default EventCollection;
+export default Collection;
