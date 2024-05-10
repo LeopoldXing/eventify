@@ -36,8 +36,8 @@ const RootPage = async () => {
         </div>
 
         {/*  Trust by Thousands of Events  */}
-        <div className="w-full max-w-7xl my-8 px-4 flex flex-col space-y-8 md:flex-row md:space-y-0 md:space-x-12 md:px-10 lg:mx-auto">
-          <h2 className="h2-bold w-full">Trust by <br/> Thousands of Events</h2>
+        <div className="wrapper my-8 flex flex-col gap-8 md:gap-12">
+          <h2 className="h2-bold">Trust by <br/> Thousands of Events</h2>
           <div className="w-full flex flex-col space-y-5 md:flex-row md:space-y-0 md:space-x-5">
             Search
             CategoryFilter
