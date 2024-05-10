@@ -18,8 +18,8 @@ const Collection = async ({itemList, fallbackTitle, fallbackSubText, collectionT
 
   return (
       <>
-        {Array.isArray(itemList) && itemList.length > 1 && (
-            <div className="flex flex-col items-center space-y-10">
+        {(Array.isArray(itemList) && itemList.length > 0) ? (
+            <div className="flex flex-col items-center gap-10">
               <ul className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:gap-7 xl:gap-10 2xl:max-w-7xl">
                 {itemList.map(event => (
                     <li key={event._id}>
@@ -28,8 +28,7 @@ const Collection = async ({itemList, fallbackTitle, fallbackSubText, collectionT
                 ))}
               </ul>
             </div>
-        )}
-        {(!Array.isArray(itemList) || itemList.length === 0) && (
+        ) : (
             <div className="py-28 flex flex-col space-y-8 justify-center text-center bg-grey-50 min-h-72">
               <h3 className="p-bold-20 md:h5-bold">{fallbackTitle}</h3>
               <p className="p-regular-14">{fallbackSubText}</p>

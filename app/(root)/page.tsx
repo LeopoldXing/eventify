@@ -42,7 +42,6 @@ const RootPage = async () => {
             Search
             CategoryFilter
           </div>
-
           <Collection itemList={events?.data} fallbackTitle="Something is wrong" fallbackSubText="fallbackSubText" collectionType="all_event" limit={5} page={1}
                       totalPage={3}/>
         </div>
