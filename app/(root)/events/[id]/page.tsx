@@ -8,19 +8,11 @@ import CheckoutButton from "@/components/CheckoutButton";
 const EventDetailsPage = async ({params: {id}, searchParams}: SearchParamProps) => {
   const event = await getEventDetailsById(id);
 
-  console.log("event detail page, event ->")
-  console.log(event);
-  console.log("searchParams -> ")
-  console.log(searchParams);
-
   const relatedEvents = await getRelatedEventsByCategory({
     categoryId: event.category._id,
     eventId: event._id,
     page: searchParams?.page as string
   });
-
-  console.log("relatedEvents -> ")
-  console.log(relatedEvents);
 
   return (
       <>
@@ -49,7 +41,7 @@ const EventDetailsPage = async ({params: {id}, searchParams}: SearchParamProps) 
               </div>
 
               {/*<CheckoutButton event={event}/>*/}
-              <CheckoutButton></CheckoutButton>
+              <CheckoutButton event={event}></CheckoutButton>
 
               <div className="flex flex-col gap-5">
                 <div className='flex gap-2 md:gap-3'>
