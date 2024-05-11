@@ -19,7 +19,7 @@ const EventCard = ({event, hasOrderLink, hidePrice}: EventCardProps) => {
 
   return (
       <div className="group w-full min-h-[380px] max-w-[400px] flex flex-col overflow-hidden rounded-xl bg-white shadow-md transition-all md:min-h-[438px]
-                      hover:shadow-lg">
+                      hover:shadow-lg relative">
         {/*  event cover  */}
         <Link href={`/events/${event._id}`} style={{backgroundImage: `url(${event.imageUrl})`}}
               className="flex items-center justify-between flex-grow bg-gray-50 bg-cover bg-center text-gray-500"/>
@@ -29,11 +29,10 @@ const EventCard = ({event, hasOrderLink, hidePrice}: EventCardProps) => {
               <Link href={`/events/${event._id}/update`}>
                 <Image src="/assets/icons/edit.svg" alt="edit" width={20} height={20}/>
               </Link>
+              {/*  delete confirmation  */}
+              <DeleteConfirmation eventId={event._id}/>
             </div>
         )}
-
-        {/*  delete confirmation  */}
-        <DeleteConfirmation eventId={event._id}/>
 
         {/*  event info  */}
         <Link href={`/events/${event._id}`} className="p-5 min-h-[230px] flex flex-col space-y-3 md:space-y-4">

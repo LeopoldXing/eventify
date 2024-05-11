@@ -1,6 +1,6 @@
 "use server";
 
-import {CreateEventParams, DeleteEventParams, GetAllEventsParams} from "@/types";
+import {CreateEventParams, DeleteEventParams, GetAllEventsParams, GetEventsByUserParams, GetRelatedEventsByCategoryParams} from "@/types";
 import {handleError} from "@/lib/utils";
 import {connectToDatabase} from "@/lib/database";
 import User from "@/lib/database/models/user.model";
@@ -107,4 +107,75 @@ const deleteEvent = async ({eventId, path}: DeleteEventParams) => {
   }
 };
 
-export {createEvent, getEventDetailsById, getAllEvents, deleteEvent};
+const getCategoryByName = async (name: string) => {
+  return Category.findOne({name: {$regex: name, $options: 'i'}})
+}
+
+// GET ALL EVENTS
+const getAllEventsByConditions = async ({query, limit = 6, page, category}: GetAllEventsParams) => {
+  try {
+    await connectToDatabase()
+
+    const titleCondition = query ? {title: {$regex: query, $options: 'i'}} : {}
+    const categoryCondition = category ? await getCategoryByName(category) : null
+    const conditions = {
+      $and: [titleCondition, categoryCondition ? {category: categoryCondition._id} : {}],
+    }
+
+    const skipAmount = (Number(page) - 1) * limit
+    const events = Event.find(conditions).sort({createdAt: 'desc'}).skip(skipAmount).limit(limit)
+        .populate({path: "category", model: Category, select: "_id name"})
+        .populate({path: "organizer", model: User, select: "_id firstName lastName"});
+
+    const eventsCount = await Event.countDocuments(conditions)
+
+    return {
+      data: JSON.parse(JSON.stringify(events)),
+      totalPages: Math.ceil(eventsCount / limit),
+    }
+  } catch (error) {
+    handleError(error)
+  }
+};
+
+// GET EVENTS BY ORGANIZER
+const getEventsByUser = async ({userId, limit = 6, page}: GetEventsByUserParams) => {
+  try {
+    await connectToDatabase()
+
+    const conditions = {organizer: userId}
+    const skipAmount = (page - 1) * limit
+
+    const events = Event.find(conditions).sort({createdAt: 'desc'}).skip(skipAmount).limit(limit)
+        .populate({path: "category", model: Category, select: "_id name"})
+        .populate({path: "organizer", model: User, select: "_id firstName lastName"});
+
+    const eventsCount = await Event.countDocuments(conditions)
+
+    return {data: JSON.parse(JSON.stringify(events)), totalPages: Math.ceil(eventsCount / limit)}
+  } catch (error) {
+    handleError(error)
+  }
+};
+
+// GET RELATED EVENTS: EVENTS WITH SAME CATEGORY
+const getRelatedEventsByCategory = async ({categoryId, eventId, limit = 3, page = 1}: GetRelatedEventsByCategoryParams) => {
+  try {
+    await connectToDatabase()
+
+    const skipAmount = (Number(page) - 1) * limit
+    const conditions = {$and: [{category: categoryId}, {_id: {$ne: eventId}}]}
+
+    const events = Event.find(conditions).sort({createdAt: 'desc'}).skip(skipAmount).limit(limit)
+        .populate({path: "category", model: Category, select: "_id name"})
+        .populate({path: "organizer", model: User, select: "_id firstName lastName"});
+
+    const eventsCount = await Event.countDocuments(conditions)
+
+    return {data: JSON.parse(JSON.stringify(events)), totalPages: Math.ceil(eventsCount / limit)}
+  } catch (error) {
+    handleError(error)
+  }
+}
+
+export {createEvent, getEventDetailsById, getAllEvents, deleteEvent, getRelatedEventsByCategory, getEventsByUser, getAllEventsByConditions};
