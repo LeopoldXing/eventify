@@ -146,7 +146,7 @@ const getAllEventsByConditions = async ({query, limit = 6, page, category}: GetA
     }
 
     const skipAmount = (Number(page) - 1) * limit
-    const events = Event.find(conditions).sort({createdAt: 'desc'}).skip(skipAmount).limit(limit)
+    const events = await Event.find(conditions).sort({createdAt: 'desc'}).skip(skipAmount).limit(limit)
         .populate({path: "category", model: Category, select: "_id name"})
         .populate({path: "organizer", model: User, select: "_id firstName lastName"});
 
@@ -169,7 +169,7 @@ const getEventsByUser = async ({userId, limit = 6, page}: GetEventsByUserParams)
     const conditions = {organizer: userId}
     const skipAmount = (page - 1) * limit
 
-    const events = Event.find(conditions).sort({createdAt: 'desc'}).skip(skipAmount).limit(limit)
+    const events = await Event.find(conditions).sort({createdAt: 'desc'}).skip(skipAmount).limit(limit)
         .populate({path: "category", model: Category, select: "_id name"})
         .populate({path: "organizer", model: User, select: "_id firstName lastName"});
 
@@ -189,7 +189,7 @@ const getRelatedEventsByCategory = async ({categoryId, eventId, limit = 3, page 
     const skipAmount = (Number(page) - 1) * limit
     const conditions = {$and: [{category: categoryId}, {_id: {$ne: eventId}}]}
 
-    const events = Event.find(conditions).sort({createdAt: 'desc'}).skip(skipAmount).limit(limit)
+    const events = await Event.find(conditions).sort({createdAt: 'desc'}).skip(skipAmount).limit(limit)
         .populate({path: "category", model: Category, select: "_id name"})
         .populate({path: "organizer", model: User, select: "_id firstName lastName"});
 
