@@ -1,7 +1,10 @@
 "use server"
 
-import {CheckoutOrderParams} from "@/types";
+import {CheckoutOrderParams, CreateOrderParams} from "@/types";
 import {redirect} from "next/navigation";
+import {handleError} from "@/lib/utils";
+import {connectToDatabase} from "@/lib/database";
+import Order from "@/lib/database/models/order.model";
 
 const checkoutOrder = async (order: CheckoutOrderParams) => {
   const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
@@ -35,4 +38,15 @@ const checkoutOrder = async (order: CheckoutOrderParams) => {
   redirect(session.url);
 }
 
-export {checkoutOrder};
+const createOrder = async (order: CreateOrderParams) => {
+  try {
+    await connectToDatabase();
+    const newOrder = Order.create({...order, event: order.eventId, buyer: order.buyerId});
+
+    return JSON.parse(JSON.stringify(newOrder));
+  } catch (e) {
+    handleError(e);
+  }
+}
+
+export {checkoutOrder, createOrder};
