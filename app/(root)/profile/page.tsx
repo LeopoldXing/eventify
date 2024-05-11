@@ -18,17 +18,28 @@ const ProfilePage = async () => {
           <div className="wrapper flex items-center justify-center sm:justify-between">
             <h3 className='h3-bold text-center sm:text-left'>My Tickets</h3>
             <Button asChild size="lg" className="button hidden sm:flex">
-              <Link href="/#events">
-                Explore More Events
-              </Link>
+              <Link href="/#events">Explore More Events</Link>
             </Button>
           </div>
         </div>
-        <div className="">
+        <div className="wrapper my-8">
           <Collection itemList={[]} collectionType="my_tickets" fallbackTitle="No event tickets purchased yet" urlParamName="orderPage"
                       fallbackSubText="No worries - plenty of exciting events to explore!" page={1} limit={6} totalPage={2}/>
         </div>
+
         {/*  event organized  */}
+        <div className="bg-primary-50 bg-dotted-pattern bg-cover bg-center py-5 md:py-10">
+          <div className="wrapper flex items-center justify-center sm:justify-between">
+            <h3 className='h3-bold text-center sm:text-left'>Event Organized</h3>
+            <Button asChild size="lg" className="button hidden sm:flex">
+              <Link href="/events/create">Create New Event</Link>
+            </Button>
+          </div>
+        </div>
+        <div className="wrapper my-8">
+          <Collection itemList={organizedEventList?.data} collectionType="my_tickets" fallbackTitle="No events have been created yet" urlParamName="orderPage"
+                      fallbackSubText="Go create some now" page={1} limit={6} totalPage={2}/>
+        </div>
       </>
   );
 };

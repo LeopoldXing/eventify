@@ -14,8 +14,6 @@ const RootPage = async () => {
     limit: 6
   });
 
-  console.log(events);
-
   return (
       <>
         {/*  Host, Connect, Celebrate: Your Events, Our Platform  */}

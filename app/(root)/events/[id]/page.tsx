@@ -3,6 +3,7 @@ import {getEventDetailsById, getRelatedEventsByCategory} from "@/lib/actions/eve
 import Image from "next/image";
 import {formatDateTime} from "@/lib/utils";
 import Collection from "@/components/Collection";
+import CheckoutButton from "@/components/CheckoutButton";
 
 const EventDetailsPage = async ({params: {id}, searchParams}: SearchParamProps) => {
   const event = await getEventDetailsById(id);
@@ -46,7 +47,9 @@ const EventDetailsPage = async ({params: {id}, searchParams}: SearchParamProps) 
                   </p>
                 </div>
               </div>
+
               {/*<CheckoutButton event={event}/>*/}
+              <CheckoutButton></CheckoutButton>
 
               <div className="flex flex-col gap-5">
                 <div className='flex gap-2 md:gap-3'>
