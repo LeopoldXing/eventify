@@ -4,6 +4,7 @@ import Link from "next/link";
 import {formatDateTime} from "@/lib/utils";
 import Image from 'next/image';
 import {auth} from "@clerk/nextjs/server";
+import DeleteConfirmation from "@/components/DeleteConfirmation";
 
 type EventCardProps = {
   event: IEvent,
@@ -30,6 +31,9 @@ const EventCard = ({event, hasOrderLink, hidePrice}: EventCardProps) => {
               </Link>
             </div>
         )}
+
+        {/*  delete confirmation  */}
+        <DeleteConfirmation eventId={event._id}/>
 
         {/*  event info  */}
         <Link href={`/events/${event._id}`} className="p-5 min-h-[230px] flex flex-col space-y-3 md:space-y-4">

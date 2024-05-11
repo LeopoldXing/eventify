@@ -1,11 +1,12 @@
 "use server";
 
-import {CreateEventParams, GetAllEventsParams} from "@/types";
+import {CreateEventParams, DeleteEventParams, GetAllEventsParams} from "@/types";
 import {handleError} from "@/lib/utils";
 import {connectToDatabase} from "@/lib/database";
 import User from "@/lib/database/models/user.model";
 import Event from "@/lib/database/models/event.model";
 import Category from "@/lib/database/models/category.model";
+import {revalidatePath} from "next/cache";
 
 /**
  * create a new event
@@ -80,4 +81,30 @@ const getAllEvents = async ({query, limit = 6, page, category}: GetAllEventsPara
   }
 }
 
-export {createEvent, getEventDetailsById, getAllEvents};
+/**
+ * delete event by id
+ * @param eventId
+ * @param path the path that needs to be revalidated after event deletion.
+ */
+const deleteEvent = async ({eventId, path}: DeleteEventParams) => {
+  try {
+    await connectToDatabase();
+
+    const conditions = {
+      eventId: eventId,
+      path: path
+    }
+
+    const deletedEvent = await Event.deleteOne(conditions);
+
+    if (deletedEvent) {
+      revalidatePath(path);
+    }
+
+    return JSON.parse(JSON.stringify(deletedEvent));
+  } catch (e) {
+    handleError(e);
+  }
+};
+
+export {createEvent, getEventDetailsById, getAllEvents, deleteEvent};
