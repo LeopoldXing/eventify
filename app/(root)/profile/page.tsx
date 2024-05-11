@@ -4,12 +4,20 @@ import Link from "next/link";
 import Collection from "@/components/Collection";
 import {auth} from "@clerk/nextjs/server";
 import {getEventsByUser} from "@/lib/actions/event.actions";
+import {getOrdersByUser} from "@/lib/actions/order.actions";
+import {IOrder} from "@/lib/database/models/order.model";
+import {SearchParamProps} from "@/types";
 
-const ProfilePage = async () => {
+const ProfilePage = async ({searchParams}: SearchParamProps) => {
   const {sessionClaims} = auth();
   const userId = sessionClaims?.userId as string;
 
-  const organizedEventList = await getEventsByUser({userId, page: 1});
+  const ordersPage = Number(searchParams?.ordersPage) || 1;
+  const eventsPage = Number(searchParams?.eventsPage) || 1;
+
+  const organizedEventList = await getEventsByUser({userId, page: eventsPage});
+  const orderList = await getOrdersByUser({userId: userId, page: ordersPage});
+  const orderedEventList = orderList?.data.map((order: IOrder) => order.event) || [];
 
   return (
       <>
@@ -23,8 +31,8 @@ const ProfilePage = async () => {
           </div>
         </div>
         <div className="wrapper my-8">
-          <Collection itemList={[]} collectionType="my_tickets" fallbackTitle="No event tickets purchased yet" urlParamName="orderPage"
-                      fallbackSubText="No worries - plenty of exciting events to explore!" page={1} limit={6} totalPage={2}/>
+          <Collection itemList={orderedEventList} collectionType="my_tickets" fallbackTitle="No event tickets purchased yet" urlParamName="orderPage"
+                      fallbackSubText="No worries - plenty of exciting events to explore!" page={ordersPage} limit={6} totalPage={orderList?.totalPages}/>
         </div>
 
         {/*  event organized  */}
@@ -37,8 +45,8 @@ const ProfilePage = async () => {
           </div>
         </div>
         <div className="wrapper my-8">
-          <Collection itemList={organizedEventList?.data} collectionType="my_tickets" fallbackTitle="No events have been created yet" urlParamName="orderPage"
-                      fallbackSubText="Go create some now" page={1} limit={6} totalPage={2}/>
+          <Collection itemList={organizedEventList?.data} collectionType="events_organized" fallbackTitle="No events have been created yet"
+                      urlParamName="orderPage" fallbackSubText="Go create some now" page={eventsPage} limit={6} totalPage={orderedEventList?.totalPages}/>
         </div>
       </>
   );
