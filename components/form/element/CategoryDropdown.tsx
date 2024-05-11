@@ -16,7 +16,7 @@ import {createCategory, getAllCategories} from "@/lib/actions/category.actions";
 import {ICategory} from "@/lib/database/models/category.model";
 
 type DropdownProps = {
-  value?: string,
+  value: string,
   onChangeHandler?: () => void
 }
 

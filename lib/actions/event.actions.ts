@@ -1,6 +1,6 @@
 "use server";
 
-import {CreateEventParams, DeleteEventParams, GetAllEventsParams, GetEventsByUserParams, GetRelatedEventsByCategoryParams} from "@/types";
+import {CreateEventParams, DeleteEventParams, GetAllEventsParams, GetEventsByUserParams, GetRelatedEventsByCategoryParams, UpdateEventParams} from "@/types";
 import {handleError} from "@/lib/utils";
 import {connectToDatabase} from "@/lib/database";
 import User from "@/lib/database/models/user.model";
@@ -82,6 +82,34 @@ const getAllEvents = async ({query, limit = 6, page, category}: GetAllEventsPara
 }
 
 /**
+ * update event by id
+ * @param userId
+ * @param event
+ * @param path
+ */
+const updateEvent = async ({userId, event, path}: UpdateEventParams) => {
+  try {
+    await connectToDatabase();
+
+    const eventToUpdate = await Event.findById(event._id)
+    if (!eventToUpdate || eventToUpdate.organizer.toHexString() !== userId) {
+      throw new Error('Unauthorized or event not found')
+    }
+
+    const updatedEvent = await Event.findByIdAndUpdate(event._id, {...event, category: event.categoryId});
+    if (!updatedEvent) {
+      throw new Error("update failed");
+    } else {
+      revalidatePath(path);
+    }
+
+    return JSON.parse(JSON.stringify(updatedEvent));
+  } catch (e) {
+    handleError(e);
+  }
+}
+
+/**
  * delete event by id
  * @param eventId
  * @param path the path that needs to be revalidated after event deletion.
@@ -90,12 +118,7 @@ const deleteEvent = async ({eventId, path}: DeleteEventParams) => {
   try {
     await connectToDatabase();
 
-    const conditions = {
-      eventId: eventId,
-      path: path
-    }
-
-    const deletedEvent = await Event.deleteOne(conditions);
+    const deletedEvent = await Event.findByIdAndDelete(eventId);
 
     if (deletedEvent) {
       revalidatePath(path);
@@ -178,4 +201,4 @@ const getRelatedEventsByCategory = async ({categoryId, eventId, limit = 3, page 
   }
 }
 
-export {createEvent, getEventDetailsById, getAllEvents, deleteEvent, getRelatedEventsByCategory, getEventsByUser, getAllEventsByConditions};
+export {createEvent, getEventDetailsById, getAllEvents, deleteEvent, getRelatedEventsByCategory, getEventsByUser, getAllEventsByConditions, updateEvent};
