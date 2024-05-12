@@ -60,24 +60,27 @@ const getEventDetailsById = async (eventId: string) => {
  */
 const getAllEvents = async ({query, limit = 6, page, category}: GetAllEventsParams) => {
   try {
-    await connectToDatabase();
+    await connectToDatabase()
 
-    /*  defining the conditions  */
-    let conditions = {};
+    const titleCondition = query ? {title: {$regex: query, $options: 'i'}} : {}
+    const categoryCondition = category ? await getCategoryByName(category) : null
+    const conditions = {
+      $and: [titleCondition, categoryCondition ? {category: categoryCondition._id} : {}],
+    }
 
-    /*  get events  */
-    const events = await Event.find(conditions).sort({createdAt: "descending"}).limit(limit).skip(0)
+    const skipAmount = (Number(page) - 1) * limit
+    const events = await Event.find(conditions).sort({createdAt: 'desc'}).skip(skipAmount).limit(limit)
         .populate({path: "category", model: Category, select: "_id name"})
         .populate({path: "organizer", model: User, select: "_id firstName lastName"});
-    const count = await Event.countDocuments(conditions);
 
-    /*  return results  */
+    const eventsCount = await Event.countDocuments(conditions)
+
     return {
       data: JSON.parse(JSON.stringify(events)),
-      totalPages: Math.ceil(events.length / count)
+      totalPages: Math.ceil(eventsCount / limit),
     }
-  } catch (e) {
-    handleError(e);
+  } catch (error) {
+    handleError(error)
   }
 }
 

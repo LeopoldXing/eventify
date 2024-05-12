@@ -3,14 +3,19 @@ import Link from "next/link";
 import Image from "next/image";
 import Collection from "@/components/Collection";
 import {getAllEvents} from "@/lib/actions/event.actions";
+import Search from "@/components/Search";
+import {SearchParamProps} from "@/types";
 
 export const revalidate = 10;
 
-const RootPage = async () => {
+const RootPage = async ({searchParams}: SearchParamProps) => {
+  const page = Number(searchParams?.page) || 1;
+  const searchText = (searchParams?.query as string) || "";
+  const category = (searchParams?.category as string) || "";
   const events = await getAllEvents({
-    query: "",
-    category: "",
-    page: 1,
+    query: searchText,
+    category: category,
+    page: page,
     limit: 6
   });
 
@@ -37,7 +42,7 @@ const RootPage = async () => {
         <div className="wrapper my-8 flex flex-col gap-8 md:gap-12">
           <h2 className="h2-bold">Trust by <br/> Thousands of Events</h2>
           <div className="w-full flex flex-col space-y-5 md:flex-row md:space-y-0 md:space-x-5">
-            Search
+            <Search placeholder="Search Title"/>
             CategoryFilter
           </div>
           <Collection itemList={events?.data} fallbackTitle="Something is wrong" fallbackSubText="fallbackSubText" collectionType="all_event" limit={5} page={1}
