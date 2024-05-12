@@ -13,36 +13,34 @@ const checkoutOrder = async (order: CheckoutOrderParams) => {
   const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
   const price = order.isFree ? 0 : Number(order.price) * 100;
 
-  console.log("checkout ---------------------------")
-  console.log("price ---> ")
-  console.log(price);
-
-  const session = await stripe.checkout.sessions.create({
-    line_items: [
-      {
-        price_data: {
-          currency: "usd",
-          unit_amount: price,
-          product_data: {
-            name: order.eventTitle
-          }
+  let session;
+  try {
+    session = await stripe.checkout.sessions.create({
+      line_items: [
+        {
+          price_data: {
+            currency: "usd",
+            unit_amount: price,
+            product_data: {
+              name: order.eventTitle
+            }
+          },
+          quantity: 1
         },
-        quantity: 1
+      ],
+      metadata: {
+        eventId: order.eventId,
+        buyerId: order.buyerId,
       },
-    ],
-    metadata: {
-      eventId: order.eventId,
-      buyerId: order.buyerId,
-    },
-    mode: 'payment',
-    success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/profile`,
-    cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/`,
-  });
-
-  console.log("session -> ")
-  console.log(session);
-
-  redirect(session.url);
+      mode: 'payment',
+      success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/profile`,
+      cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/`,
+    });
+  } catch (e) {
+    handleError(e);
+  } finally {
+    redirect(session.url!);
+  }
 }
 
 const createOrder = async (order: CreateOrderParams) => {
@@ -60,11 +58,6 @@ const createOrder = async (order: CreateOrderParams) => {
 const getOrdersByEvent = async ({searchString, eventId}: GetOrdersByEventParams) => {
   try {
     await connectToDatabase()
-
-    console.log("server action - eventId -> ")
-    console.log(eventId);
-    console.log("server action - searchString -> ")
-    console.log(searchString);
 
     if (!eventId) throw new Error('Event ID is required')
     const eventObjectId = new ObjectId(eventId)
@@ -111,9 +104,6 @@ const getOrdersByEvent = async ({searchString, eventId}: GetOrdersByEventParams)
         },
       },
     ])
-
-    console.log("server action - orders -> ")
-    console.log(orders);
 
     return JSON.parse(JSON.stringify(orders))
   } catch (error) {
