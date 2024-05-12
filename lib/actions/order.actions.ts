@@ -13,6 +13,10 @@ const checkoutOrder = async (order: CheckoutOrderParams) => {
   const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
   const price = order.isFree ? 0 : Number(order.price) * 100;
 
+  console.log("checkout ---------------------------")
+  console.log("price ---> ")
+  console.log(price);
+
   const session = await stripe.checkout.sessions.create({
     line_items: [
       {
@@ -57,6 +61,11 @@ const getOrdersByEvent = async ({searchString, eventId}: GetOrdersByEventParams)
   try {
     await connectToDatabase()
 
+    console.log("server action - eventId -> ")
+    console.log(eventId);
+    console.log("server action - searchString -> ")
+    console.log(searchString);
+
     if (!eventId) throw new Error('Event ID is required')
     const eventObjectId = new ObjectId(eventId)
 
@@ -97,10 +106,14 @@ const getOrdersByEvent = async ({searchString, eventId}: GetOrdersByEventParams)
       },
       {
         $match: {
-          $and: [{eventId: eventObjectId}, {buyer: {$regex: RegExp(searchString, 'i')}}],
+          /*$and: [{eventId: eventObjectId}, {buyer: {$regex: RegExp(searchString, 'i')}}],*/
+          $and: [{eventId: eventObjectId}],
         },
       },
     ])
+
+    console.log("server action - orders -> ")
+    console.log(orders);
 
     return JSON.parse(JSON.stringify(orders))
   } catch (error) {
