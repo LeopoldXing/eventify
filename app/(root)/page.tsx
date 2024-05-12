@@ -5,6 +5,7 @@ import Collection from "@/components/Collection";
 import {getAllEvents} from "@/lib/actions/event.actions";
 import Search from "@/components/Search";
 import {SearchParamProps} from "@/types";
+import CategoryFilter from "@/components/CategoryFilter";
 
 export const revalidate = 10;
 
@@ -43,7 +44,7 @@ const RootPage = async ({searchParams}: SearchParamProps) => {
           <h2 className="h2-bold">Trust by <br/> Thousands of Events</h2>
           <div className="w-full flex flex-col space-y-5 md:flex-row md:space-y-0 md:space-x-5">
             <Search placeholder="Search Title"/>
-            CategoryFilter
+            <CategoryFilter/>
           </div>
           <Collection itemList={events?.data} fallbackTitle="Something is wrong" fallbackSubText="fallbackSubText" collectionType="all_event" limit={5} page={1}
                       totalPage={3}/>
