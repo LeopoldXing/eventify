@@ -76,7 +76,7 @@ const EventDetailsPage = async ({params: {id}, searchParams}: SearchParamProps) 
         <div className="wrapper my-8 flex flex-col gap-8 md:gap-12">
           <h2 className="h2-bold">Related Events</h2>
           <Collection itemList={relatedEvents?.data} fallbackTitle="No Events Found" fallbackSubText="Come back later" collectionType="all_event" limit={3}
-                      page={searchParams.page as string} totalPage={relatedEvents?.totalPages}
+                      page={searchParams.page as string} totalPages={relatedEvents?.totalPages}
           />
         </div>
       </>

@@ -1,5 +1,6 @@
 import {IEvent} from "@/lib/database/models/event.model";
 import EventCard from "@/components/EventCard";
+import Pagination from "@/components/Pagination";
 
 type CollectionProps = {
   itemList: IEvent[],
@@ -8,11 +9,11 @@ type CollectionProps = {
   collectionType?: "all_event" | "events_organized" | "my_tickets",
   limit: number,
   page: number | string,
-  totalPage?: number,
+  totalPages?: number,
   urlParamName?: string
 }
 
-const Collection = async ({itemList, fallbackTitle, fallbackSubText, collectionType, limit, page, totalPage = 0, urlParamName}: CollectionProps) => {
+const Collection = async ({itemList, fallbackTitle, fallbackSubText, collectionType, limit, page, totalPages = 0, urlParamName}: CollectionProps) => {
   return (
       <>
         {(Array.isArray(itemList) && itemList.length > 0) ? (
@@ -24,6 +25,7 @@ const Collection = async ({itemList, fallbackTitle, fallbackSubText, collectionT
                     </li>
                 ))}
               </ul>
+              {totalPages > 1 && (<Pagination page={Number(page)} totalPages={totalPages} urlParamName={urlParamName}/>)}
             </div>
         ) : (
             <div className="flex-center wrapper min-h-[200px] w-full flex-col gap-3 rounded-[14px] bg-grey-50 py-28 text-center">

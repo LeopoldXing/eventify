@@ -46,8 +46,8 @@ const RootPage = async ({searchParams}: SearchParamProps) => {
             <Search placeholder="Search Title"/>
             <CategoryFilter/>
           </div>
-          <Collection itemList={events?.data} fallbackTitle="Something is wrong" fallbackSubText="fallbackSubText" collectionType="all_event" limit={5} page={1}
-                      totalPage={3}/>
+          <Collection itemList={events?.data} fallbackTitle="Something is wrong" fallbackSubText="fallbackSubText" collectionType="all_event" limit={6}
+                      page={page} totalPages={events?.totalPages}/>
         </div>
       </>
   );
